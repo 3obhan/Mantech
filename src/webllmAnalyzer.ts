@@ -186,9 +186,9 @@ async function generateOnce(
     eng.chat.completions.create({
       messages: [{ role: 'user', content: buildPrompt(text, isPersian) }],
       temperature: 0,
-      max_tokens: 2000,
+      max_tokens: 3000,
     }),
-    6 * 60 * 1000,
+    3 * 60 * 1000,
     'AI generation'
   );
 }
