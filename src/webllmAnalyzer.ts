@@ -188,7 +188,7 @@ async function generateOnce(
       temperature: 0,
       max_tokens: 3000,
     }),
-    3 * 60 * 1000,
+    8 * 60 * 1000,
     'AI generation'
   );
 }

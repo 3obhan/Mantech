@@ -1,16 +1,16 @@
 <div align="center">
-<h1>Mantech | منطچ</h1>
+<h1>Mantec | منطک</h1>
 <p><b>Logical Analyzer Tool | ابزار سنجش منطق</b></p>
 <p>English | فارسی</p>
 </div>
 
 ## About | دربارهٔ پروژه
 
-Mantech (منطچ) reads a piece of Persian or English text and points out logical
+Mantec (منطک) reads a piece of Persian or English text and points out logical
 fallacies, absurdities, and reasoning errors — explaining *what* the issue is
 and *why* it's a problem.
 
-منطچ متن فارسی یا انگلیسی شما را می‌خواند و مغالطات منطقی، تناقض‌ها و خطاهای
+منطک متن فارسی یا انگلیسی شما را می‌خواند و مغالطات منطقی، تناقض‌ها و خطاهای
 استدلالی را به شما نشان می‌دهد؛ همراه با توضیح اینکه چرا و کجای متن اشکال دارد.
 
 ## 100% Free, No Install Required | کاملاً رایگان و بدون نیاز به نصب
@@ -33,12 +33,8 @@ All analysis is performed by a real language model, tried in this order:
    Groq's API directly from your browser
    ([`src/groqAnalyzer.ts`](./src/groqAnalyzer.ts)). Very fast responses,
    generous free tier, runs strong open-weight models.
-2. **Gemini** — used if no Groq key is set (or Groq fails) and you've
-   added a free Gemini key (get one at
-   [aistudio.google.com/apikey](https://aistudio.google.com/apikey))
-   ([`src/geminiAnalyzer.ts`](./src/geminiAnalyzer.ts)).
-3. **In-browser AI (WebGPU)** — used automatically if neither key is set
-   (or both fail), via
+2. **In-browser AI (WebGPU)** — used automatically if no Groq key is set
+   (or Groq fails), via
    [@mlc-ai/web-llm](https://github.com/mlc-ai/web-llm)
    ([`src/webllmAnalyzer.ts`](./src/webllmAnalyzer.ts)). Nothing to
    install, but support varies a lot by device/browser/GPU driver

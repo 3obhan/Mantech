@@ -4,7 +4,6 @@ import { translations } from '../i18n';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Download, HelpCircle } from 'lucide-react';
 import { runBrowserAIAnalysis, resetEngine, LoadProgress } from '../webllmAnalyzer';
-import { runGeminiAnalysis, getStoredApiKey, setStoredApiKey, clearStoredApiKey } from '../geminiAnalyzer';
 import { runGroqAnalysis, getStoredGroqApiKey, setStoredGroqApiKey, clearStoredGroqApiKey } from '../groqAnalyzer';
 import { Fallacy } from '../types';
 import jsPDF from 'jspdf';
@@ -23,11 +22,8 @@ export const Analyze = () => {
   const [stampSrc, setStampSrc] = useState<string>('');
   const [logoSrc, setLogoSrc] = useState<string>('');
   const [modelProgress, setModelProgress] = useState<LoadProgress | null>(null);
-  const [usedEngine, setUsedEngine] = useState<'groq' | 'gemini' | 'webgpu' | null>(null);
+  const [usedEngine, setUsedEngine] = useState<'groq' | 'webgpu' | null>(null);
   const [aiFailReason, setAiFailReason] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState<string | null>(() => getStoredApiKey());
-  const [apiKeyInput, setApiKeyInput] = useState('');
-  const [showKeyForm, setShowKeyForm] = useState(false);
   const [groqApiKey, setGroqApiKey] = useState<string | null>(() => getStoredGroqApiKey());
   const [groqApiKeyInput, setGroqApiKeyInput] = useState('');
   const [showGroqKeyForm, setShowGroqKeyForm] = useState(false);
@@ -249,7 +245,7 @@ export const Analyze = () => {
     setAiFailReason(null);
 
     let analysisData: Fallacy[] | null = null;
-    let engineUsed: 'groq' | 'gemini' | 'webgpu' | null = null;
+    let engineUsed: 'groq' | 'webgpu' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
     // 1) Groq (cloud) — very fast, strong open-weight models, generous free
@@ -265,29 +261,11 @@ export const Analyze = () => {
           clearStoredGroqApiKey();
           setGroqApiKey(null);
         }
-        console.warn('Groq failed, trying Gemini:', groqErr);
+        console.warn('Groq failed, trying in-browser WebGPU AI:', groqErr);
       }
     }
 
-    // 2) Gemini (cloud) — strong reasoning quality, only if the user has
-    //    entered their own free API key. No shared quota, no cost to us,
-    //    requires internet.
-    if (!analysisData && apiKey) {
-      try {
-        analysisData = await runGeminiAnalysis(text, lang as 'fa' | 'en');
-        engineUsed = 'gemini';
-      } catch (geminiErr: any) {
-        const msg = geminiErr?.message || String(geminiErr);
-        errors.push({ engine: 'Gemini', message: msg });
-        if (msg === 'INVALID_API_KEY') {
-          clearStoredApiKey();
-          setApiKey(null);
-        }
-        console.warn('Gemini failed, trying in-browser WebGPU AI:', geminiErr);
-      }
-    }
-
-    // 3) In-browser WebGPU AI — no install required, but support varies by device.
+    // 2) In-browser WebGPU AI — no install required, but support varies by device.
     if (!analysisData) {
       try {
         analysisData = await runBrowserAIAnalysis(text, lang as 'fa' | 'en', (p) => setModelProgress(p));
@@ -429,67 +407,6 @@ export const Analyze = () => {
         )}
       </div>
 
-      <div className="bg-white border-4 border-[#1A1A1A] p-4 mb-6 sm:mb-8 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-        {apiKey ? (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <p className="text-xs sm:text-sm font-bold text-[#2E7D32]">
-              {isFa ? '✓ کلید Gemini ثبت شده — تحلیل آنلاین و دقیق فعاله.' : '✓ Gemini API key set — precise online analysis is active.'}
-            </p>
-            <button
-              onClick={() => { clearStoredApiKey(); setApiKey(null); setShowKeyForm(true); }}
-              className="text-xs underline font-bold text-gray-500 hover:text-[#1A1A1A] shrink-0"
-            >
-              {isFa ? 'حذف/تغییر کلید' : 'Remove / change key'}
-            </button>
-          </div>
-        ) : showKeyForm ? (
-          <div className="flex flex-col gap-2">
-            <p className="text-xs sm:text-sm font-bold">
-              {isFa
-                ? 'کلید API رایگان Gemini رو از aistudio.google.com/apikey بگیر و اینجا بچسبون:'
-                : 'Get a free Gemini API key from aistudio.google.com/apikey and paste it here:'}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="password"
-                value={apiKeyInput}
-                onChange={(e) => setApiKeyInput(e.target.value)}
-                placeholder="AIzaSy..."
-                className="flex-1 p-2 border-2 border-[#1A1A1A] font-mono text-sm"
-                dir="ltr"
-              />
-              <button
-                onClick={() => {
-                  if (apiKeyInput.trim()) {
-                    setStoredApiKey(apiKeyInput.trim());
-                    setApiKey(apiKeyInput.trim());
-                    setApiKeyInput('');
-                    setShowKeyForm(false);
-                  }
-                }}
-                className="px-4 py-2 bg-[#1A1A1A] text-white font-bold text-sm hover:opacity-80"
-              >
-                {isFa ? 'ذخیره' : 'Save'}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <p className="text-xs sm:text-sm font-bold">
-              {isFa
-                ? 'برای دقیق‌ترین تحلیل جایگزین (آنلاین، با Gemini)، یک کلید رایگان اضافه کن. بدون هیچ‌کدوم از کلیدها، اپ به‌صورت خودکار هوش مصنوعی داخل مرورگر رو امتحان می‌کنه.'
-                : 'For an alternate precise online analysis (via Gemini), add a free API key. Without either key, the app automatically tries in-browser AI instead.'}
-            </p>
-            <button
-              onClick={() => setShowKeyForm(true)}
-              className="px-4 py-2 bg-[#1A1A1A] text-white font-bold text-xs uppercase shrink-0 hover:opacity-80"
-            >
-              {isFa ? 'افزودن کلید' : 'Add API key'}
-            </button>
-          </div>
-        )}
-      </div>
-
       {modelProgress && (
         <div className="bg-white border-4 border-[#1A1A1A] p-4 mb-6 sm:mb-8 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
           <p className="text-xs sm:text-sm font-mono font-bold mb-2 truncate">
@@ -534,8 +451,8 @@ export const Analyze = () => {
           <p className="opacity-80 whitespace-pre-wrap">{aiFailReason}</p>
           <p className="mt-2 opacity-70 font-sans">
             {isFa
-              ? 'برای بهترین نتیجه، کلید API رایگان Gemini رو بالای صفحه اضافه کن (aistudio.google.com/apikey).'
-              : 'For the most reliable results, add a free Gemini API key above (aistudio.google.com/apikey).'}
+              ? 'برای بهترین نتیجه، کلید API رایگان Groq رو بالای صفحه اضافه کن (console.groq.com/keys).'
+              : 'For the most reliable results, add a free Groq API key above (console.groq.com/keys).'}
           </p>
           <button onClick={handleAnalyze} className="mt-2 underline font-bold hover:opacity-70">
             {isFa ? 'تلاش دوباره' : 'Retry'}
@@ -551,8 +468,6 @@ export const Analyze = () => {
               <span className="text-[10px] sm:text-xs font-mono font-bold uppercase text-gray-500">
                 {usedEngine === 'groq'
                   ? (isFa ? 'انجام‌شده با Groq (آنلاین، سریع)' : 'Performed by Groq (online, fast)')
-                  : usedEngine === 'gemini'
-                  ? (isFa ? 'انجام‌شده با Gemini (آنلاین، دقیق)' : 'Performed by Gemini (online, precise)')
                   : (isFa ? 'انجام‌شده با هوش مصنوعی داخل مرورگر' : 'Performed by in-browser AI')}
               </span>
             )}
