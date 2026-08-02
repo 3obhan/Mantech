@@ -1,16 +1,16 @@
 <div align="center">
-<h1>Mantec | منطک</h1>
+<h1>Mantech | منطچ</h1>
 <p><b>Logical Analyzer Tool | ابزار سنجش منطق</b></p>
 <p>English | فارسی</p>
 </div>
 
 ## About | دربارهٔ پروژه
 
-Mantec (منطک) reads a piece of Persian or English text and points out logical
+Mantech (منطچ) reads a piece of Persian or English text and points out logical
 fallacies, absurdities, and reasoning errors — explaining *what* the issue is
 and *why* it's a problem.
 
-منطک متن فارسی یا انگلیسی شما را می‌خواند و مغالطات منطقی، تناقض‌ها و خطاهای
+منطچ متن فارسی یا انگلیسی شما را می‌خواند و مغالطات منطقی، تناقض‌ها و خطاهای
 استدلالی را به شما نشان می‌دهد؛ همراه با توضیح اینکه چرا و کجای متن اشکال دارد.
 
 ## 100% Free, No Install Required | کاملاً رایگان و بدون نیاز به نصب
