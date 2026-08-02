@@ -20,7 +20,7 @@ const LayoutWrapper = ({ children, dir }: { children: React.ReactNode, dir: 'rtl
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[#E8F5E9] border border-[#2E7D32] rounded-full" dir="ltr">
             <div className="w-2 h-2 bg-[#4CAF50] rounded-full animate-pulse"></div>
-            <span className="text-xs font-bold text-[#2E7D32] uppercase">100% Local & Free</span>
+            <span className="text-xs font-bold text-[#2E7D32] uppercase">Free · Bring Your Own Key</span>
           </div>
           <div className="flex bg-[#EEEEEE] p-1 border border-[#1A1A1A]" dir="ltr">
             <button onClick={() => setLang('en')} className={`px-4 py-1 text-xs font-bold ${lang === 'en' ? 'bg-[#1A1A1A] text-white' : ''}`}>EN</button>
@@ -37,11 +37,11 @@ const LayoutWrapper = ({ children, dir }: { children: React.ReactNode, dir: 'rtl
         <div className="flex gap-8">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-bold text-gray-400">Logic Engine</span>
-            <span className="text-xs font-mono font-bold">Local Rule Engine</span>
+            <span className="text-xs font-mono font-bold">Groq + WebGPU AI</span>
           </div>
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-bold text-gray-400">Inference Mode</span>
-            <span className="text-xs font-mono font-bold uppercase">Offline · No Server</span>
+            <span className="text-xs font-mono font-bold uppercase">Online · Bring Your Own Key</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
