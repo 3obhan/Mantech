@@ -1,0 +1,36 @@
+{
+  "name": "mantec",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "author": "Sobhan Ganji",
+  "description": "Mantec | منطک — a fully offline, 100% free, dependency-free Persian & English logical fallacy analyzer. No API key, no backend, no account required.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.84",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "dom-to-image-more": "^3.10.0",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "react-router-dom": "^7.17.0",
+    "vite": "^6.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}

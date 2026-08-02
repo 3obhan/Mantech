@@ -1,0 +1,6 @@
+{
+  "name": "Mantec Logical Analyzer",
+  "description": "A fully offline, 100% free, dependency-free logical analyzer that uses a transparent local rule engine to detect logical fallacies and reasoning errors in Persian and English text, with outputs designed as graded exam papers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
