@@ -1,14 +1,7 @@
 import { Fallacy } from './types';
 
-/**
- * Mantec Groq Engine
- * ---------------------------------------------------------------
- * Calls Groq's OpenAI-compatible API directly from the browser, using the
- * user's own free API key (obtained at https://console.groq.com/keys).
- */
-
 const STORAGE_KEY = 'mantec_groq_api_key';
-// مدل تولیدی و فعال رسمی در API پلتفرم Groq
+// استفاده از مدل کاملاً فعال Groq
 const MODEL_ID = 'llama-3.3-70b-versatile';
 
 export function getStoredGroqApiKey(): string | null {
@@ -88,55 +81,58 @@ function extractIssues(raw: string): any[] {
 
 export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<Fallacy[]> {
   const apiKey = getStoredGroqApiKey();
-  if (!apiKey) {
+  if (!apiKey || !apiKey.trim()) {
+    console.error('[Groq Engine Error]: No API key found in localStorage');
     throw new Error('NO_API_KEY');
   }
 
   const isPersian = lang === 'fa';
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: MODEL_ID,
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a precise JSON-only API response generator. Always return valid JSON matching the requested schema.'
-        },
-        { 
-          role: 'user', 
-          content: buildPrompt(text, isPersian) 
-        }
-      ],
-      temperature: 0,
-      response_format: { type: 'json_object' },
-    }),
-  });
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey.trim()}`,
+      },
+      body: JSON.stringify({
+        model: MODEL_ID,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a JSON-only response generator. Output strictly valid JSON matching the schema.'
+          },
+          { 
+            role: 'user', 
+            content: buildPrompt(text, isPersian) 
+          }
+        ],
+        temperature: 0,
+        response_format: { type: 'json_object' },
+      }),
+    });
 
-  if (!res.ok) {
-    const body = await res.text();
-    if (res.status === 401) {
-      throw new Error('INVALID_API_KEY');
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`[Groq Network Response Error] Status ${res.status}:`, errorText);
+      if (res.status === 401) throw new Error('INVALID_API_KEY');
+      if (res.status === 429) throw new Error('RATE_LIMITED');
+      throw new Error(`Groq request failed (${res.status}): ${errorText}`);
     }
-    if (res.status === 429) {
-      throw new Error('RATE_LIMITED');
-    }
-    throw new Error(`Groq request failed (${res.status}): ${body}`);
+
+    const data = await res.json();
+    const content: string = data.choices?.[0]?.message?.content ?? '{"issues":[]}';
+    const parsed = extractIssues(content);
+
+    return parsed
+      .filter((item: any) => item && (item.quote || item.errorName))
+      .map((item: any) => ({
+        quote: String(item.quote ?? ''),
+        errorName: String(item.errorName ?? ''),
+        explanation: String(item.explanation ?? ''),
+      }));
+  } catch (error) {
+    console.error('[Groq Engine Crash Details]:', error);
+    throw error; // اجازه بده خطا بالا برود تا دقیقاً ریشه‌یابی شود
   }
-
-  const data = await res.json();
-  const content: string = data.choices?.[0]?.message?.content ?? '{"issues":[]}';
-  const parsed = extractIssues(content);
-
-  return parsed
-    .filter((item: any) => item && (item.quote || item.errorName))
-    .map((item: any) => ({
-      quote: String(item.quote ?? ''),
-      errorName: String(item.errorName ?? ''),
-      explanation: String(item.explanation ?? ''),
-    }));
 }
