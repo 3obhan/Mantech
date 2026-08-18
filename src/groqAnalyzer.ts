@@ -1,7 +1,13 @@
 import { Fallacy } from './types';
 
+/**
+ * Mantec Groq Engine
+ * ---------------------------------------------------------------
+ * Calls Groq's OpenAI-compatible API directly from the browser, using the
+ * user's own free API key (obtained at https://console.groq.com/keys).
+ */
+
 const STORAGE_KEY = 'mantec_groq_api_key';
-// استفاده از مدل کاملاً فعال Groq
 const MODEL_ID = 'llama-3.3-70b-versatile';
 
 export function getStoredGroqApiKey(): string | null {
@@ -14,6 +20,7 @@ export function getStoredGroqApiKey(): string | null {
 
 export function setStoredGroqApiKey(key: string) {
   try {
+    // اصلاح متد ذخیره‌سازی کلید
     localStorage.setItem(STORAGE_KEY, key.trim());
   } catch {
     /* ignore */
@@ -42,7 +49,7 @@ RULES:
 - Be fair: do not flag genuine artistic language, metaphor, humor, or plainly-labeled opinion as a logical error unless it's presented as a literal logical claim.
 - Find EVERY distinct issue you can — do not stop after the first one found.
 - If, after rigorous scrutiny, there are truly no errors, return an empty "issues" array. Do not invent issues that aren't there.
-- Respond with a single JSON object of exactly this shape, and nothing else:
+- Respond with a single JSON object of exactly this shape, and nothing else — no markdown fences, no commentary:
 {"issues": [{"quote": "<exact flawed segment from the text, in the original language>", "errorName": "<name of the fallacy/error, in ${isPersian ? 'Persian' : 'English'}>", "explanation": "<clear, rigorous, educational explanation of exactly why it's flawed, in ${isPersian ? 'Persian' : 'English'}>"}]}
 
 TEXT TO EVALUATE:
@@ -82,7 +89,7 @@ function extractIssues(raw: string): any[] {
 export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<Fallacy[]> {
   const apiKey = getStoredGroqApiKey();
   if (!apiKey || !apiKey.trim()) {
-    console.error('[Groq Engine Error]: No API key found in localStorage');
+    console.error('[Groq Engine] Missing API Key in LocalStorage');
     throw new Error('NO_API_KEY');
   }
 
@@ -100,7 +107,7 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
         messages: [
           {
             role: 'system',
-            content: 'You are a JSON-only response generator. Output strictly valid JSON matching the schema.'
+            content: 'You are a JSON-only response engine. You must output raw JSON matching the required schema.'
           },
           { 
             role: 'user', 
@@ -114,7 +121,7 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error(`[Groq Network Response Error] Status ${res.status}:`, errorText);
+      console.error(`[Groq HTTP Error ${res.status}]:`, errorText);
       if (res.status === 401) throw new Error('INVALID_API_KEY');
       if (res.status === 429) throw new Error('RATE_LIMITED');
       throw new Error(`Groq request failed (${res.status}): ${errorText}`);
@@ -131,8 +138,8 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
         errorName: String(item.errorName ?? ''),
         explanation: String(item.explanation ?? ''),
       }));
-  } catch (error) {
-    console.error('[Groq Engine Crash Details]:', error);
-    throw error; // اجازه بده خطا بالا برود تا دقیقاً ریشه‌یابی شود
+  } catch (err) {
+    console.error('[Groq Analysis Failed]:', err);
+    throw err;
   }
 }
