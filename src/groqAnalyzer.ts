@@ -14,7 +14,7 @@ import { Fallacy } from './types';
  */
 
 const STORAGE_KEY = 'mantec_groq_api_key';
-const MODEL_ID = 'llama-3.3-70b-versatile';
+const MODEL_ID = 'openai/gpt-oss-120b';
 
 export function getStoredGroqApiKey(): string | null {
   try {
