@@ -5,17 +5,11 @@ import { Fallacy } from './types';
  * ---------------------------------------------------------------
  * Calls Groq's OpenAI-compatible API directly from the browser, using the
  * user's own free API key (obtained at https://console.groq.com/keys).
- *
- * Groq runs strong open-weight models (Llama, Qwen, etc.) on custom
- * inference hardware — very fast responses, generous free tier.
- *
- * "Bring your own key" model: no shared quota, no cost to
- * us, key stored only in the user's browser (localStorage).
  */
 
 const STORAGE_KEY = 'mantec_groq_api_key';
-// مدل پیش‌فرض به‌روزرسانی‌شده برای بهره‌وری بهتر از قابلیت‌های ساختاریافته (JSON Mode)
-const MODEL_ID = 'llama-3.3-70b-versatile';
+// به‌روزرسانی مدل پیش‌فرض طبق آخرین تغییرات Groq
+const MODEL_ID = 'openai/gpt-oss-120b';
 
 export function getStoredGroqApiKey(): string | null {
   try {
@@ -27,7 +21,6 @@ export function getStoredGroqApiKey(): string | null {
 
 export function setStoredGroqApiKey(key: string) {
   try {
-    // اصلاح خطای تایپی از setI به setItem
     localStorage.setItem(STORAGE_KEY, key.trim());
   } catch {
     /* ignore */
@@ -110,7 +103,6 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
     body: JSON.stringify({
       model: MODEL_ID,
       messages: [
-        // در مدل‌های جدید Llama، استفاده از system prompt جداگانه یا ساختاردهی دقیق‌تر توصیه می‌شود
         {
           role: 'system',
           content: 'You are a precise JSON-only API response generator. Always return valid JSON matching the requested schema.'
