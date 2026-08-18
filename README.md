@@ -66,6 +66,4 @@ static host (GitHub Pages — a ready-made workflow is included in
 `.github/workflows/deploy.yml` — Netlify, Vercel, Cloudflare Pages, or a
 plain file server) and it will work with zero backend configuration.
 
-## License | لایسنس
-
 Copyright © 2026 Sobhan Ganji
