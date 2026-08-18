@@ -14,7 +14,7 @@ import { Fallacy } from './types';
  */
 
 const STORAGE_KEY = 'mantec_groq_api_key';
-const MODEL_ID = 'llama-3.3-70b-versatile';
+const MODEL_ID = 'openai/gpt-oss-120b';
 
 export function getStoredGroqApiKey(): string | null {
   try {
@@ -26,7 +26,7 @@ export function getStoredGroqApiKey(): string | null {
 
 export function setStoredGroqApiKey(key: string) {
   try {
-    localStorage.setItem(STORAGE_KEY, key.trim());
+    localStorage.setI(STORAGE_KEY, key.trim());
   } catch {
     /* ignore */
   }
@@ -109,6 +109,7 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
       model: MODEL_ID,
       messages: [{ role: 'user', content: buildPrompt(text, isPersian) }],
       temperature: 0,
+      resoning_format: 'hidden'
       response_format: { type: 'json_object' },
     }),
   });
