@@ -5,10 +5,15 @@ import { Fallacy } from './types';
  * ---------------------------------------------------------------
  * Calls Groq's OpenAI-compatible API directly from the browser, using the
  * user's own free API key (obtained at https://console.groq.com/keys).
+ *
+ * Groq runs strong open-weight models (Llama, Qwen, etc.) on custom
+ * inference hardware — very fast responses, generous free tier.
+ *
+ * Same "bring your own key" model as Gemini: no shared quota, no cost to
+ * us, key stored only in the user's browser (localStorage).
  */
 
 const STORAGE_KEY = 'mantec_groq_api_key';
-// به‌روزرسانی مدل پیش‌فرض طبق آخرین تغییرات Groq
 const MODEL_ID = 'llama-3.3-70b-versatile';
 
 export function getStoredGroqApiKey(): string | null {
@@ -49,7 +54,7 @@ RULES:
 - Be fair: do not flag genuine artistic language, metaphor, humor, or plainly-labeled opinion as a logical error unless it's presented as a literal logical claim.
 - Find EVERY distinct issue you can — do not stop after the first one found.
 - If, after rigorous scrutiny, there are truly no errors, return an empty "issues" array. Do not invent issues that aren't there.
-- Respond with a single JSON object of exactly this shape, and nothing else:
+- Respond with a single JSON object of exactly this shape, and nothing else — no markdown fences, no commentary:
 {"issues": [{"quote": "<exact flawed segment from the text, in the original language>", "errorName": "<name of the fallacy/error, in ${isPersian ? 'Persian' : 'English'}>", "explanation": "<clear, rigorous, educational explanation of exactly why it's flawed, in ${isPersian ? 'Persian' : 'English'}>"}]}
 
 TEXT TO EVALUATE:
@@ -102,16 +107,7 @@ export async function runGroqAnalysis(text: string, lang: 'fa' | 'en'): Promise<
     },
     body: JSON.stringify({
       model: MODEL_ID,
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a precise JSON-only API response generator. Always return valid JSON matching the requested schema.'
-        },
-        { 
-          role: 'user', 
-          content: buildPrompt(text, isPersian) 
-        }
-      ],
+      messages: [{ role: 'user', content: buildPrompt(text, isPersian) }],
       temperature: 0,
       response_format: { type: 'json_object' },
     }),
