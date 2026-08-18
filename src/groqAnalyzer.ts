@@ -9,7 +9,7 @@ import { Fallacy } from './types';
  * Groq runs strong open-weight models (Llama, Qwen, etc.) on custom
  * inference hardware — very fast responses, generous free tier.
  *
- * Same "bring your own key" model as Gemini: no shared quota, no cost to
+ * "Bring your own key" model: no shared quota, no cost to
  * us, key stored only in the user's browser (localStorage).
  */
 
