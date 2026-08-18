@@ -1,12 +1,12 @@
-<div align="center">
-<h1>Mantec | منطک</h1>
-<p><b>Logical Analyzer Tool | ابزار سنجش منطق</b></p>
-<p>English | فارسی</p>
-</div>
+# Mantech | منطک
+
+**Logical Analyzer Tool | ابزار سنجش منطق**
+
+English | فارسی
 
 ## About | دربارهٔ پروژه
 
-Mantec (منطک) reads a piece of Persian or English text and points out logical
+Mantech (منطک) reads a piece of Persian or English text and points out logical
 fallacies, absurdities, and reasoning errors — explaining *what* the issue is
 and *why* it's a problem.
 
@@ -18,11 +18,10 @@ and *why* it's a problem.
 This version of Mantec runs **entirely in your browser**:
 
 - **No required API key.** Works out of the box; adding your own free
-  Gemini key is optional, just for stronger results.
+  Groq key is optional, just for faster, stronger results.
 - **No backend server.** There is no server to host, pay for, or keep online.
 - **No account, no login, no tracking.** Your text never leaves your device
-  (or goes straight to Google's API if you add your own Gemini key — see
-  below).
+  (or goes straight to Groq's API if you add your own key — see below).
 - **Nothing to install.** Everything runs in the browser tab; no separate
   app or background service is required.
 
@@ -31,19 +30,19 @@ All analysis is performed by a real language model, tried in this order:
 1. **Groq** (recommended) — if you add your own free API key (get one at
    [console.groq.com/keys](https://console.groq.com/keys)), the app calls
    Groq's API directly from your browser
-   ([`src/groqAnalyzer.ts`](./src/groqAnalyzer.ts)). Very fast responses,
-   generous free tier, runs strong open-weight models.
+   ([`src/groqAnalyzer.ts`](https://github.com/3obhan/Mantech/blob/main/src/groqAnalyzer.ts)).
+   Very fast responses, generous free tier, runs strong open-weight models.
 2. **In-browser AI (WebGPU)** — used automatically if no Groq key is set
    (or Groq fails), via
    [@mlc-ai/web-llm](https://github.com/mlc-ai/web-llm)
-   ([`src/webllmAnalyzer.ts`](./src/webllmAnalyzer.ts)). Nothing to
-   install, but support varies a lot by device/browser/GPU driver
+   ([`src/webllmAnalyzer.ts`](https://github.com/3obhan/Mantech/blob/main/src/webllmAnalyzer.ts)).
+   Nothing to install, but support varies a lot by device/browser/GPU driver
    combination.
 
-Each API key is stored only in your browser's local storage and sent
-directly to that provider — never to us or any other server. Every user
-has their own free-tier quota, so there's no shared limit and no cost to
-anyone hosting this app.
+Your API key is stored only in your browser's local storage and sent
+directly to Groq — never to us or any other server. Every user has their
+own free-tier quota, so there's no shared limit and no cost to anyone
+hosting this app.
 
 Either way: no backend server to run, and no per-request cost to whoever
 hosts this app.
@@ -60,13 +59,13 @@ npm run preview    # preview the production build
 No `.env` file, no API keys, and no environment variables are required for
 any of these commands.
 
-## Deploying | استقرار
+## Deploying | دپلوی
 
 `npm run build` produces a fully static `dist/` folder. Upload it to any
 static host (GitHub Pages — a ready-made workflow is included in
 `.github/workflows/deploy.yml` — Netlify, Vercel, Cloudflare Pages, or a
 plain file server) and it will work with zero backend configuration.
 
-## License
+## License | لایسنس
 
-Copyright © 2026 Sobhan Ganji. Released under the [MIT License](./LICENSE) — free to use, modify, and share.
+Copyright © 2026 Sobhan Ganji
