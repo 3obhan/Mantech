@@ -9,7 +9,7 @@ import { Fallacy } from './types';
 
 const STORAGE_KEY = 'mantec_groq_api_key';
 // به‌روزرسانی مدل پیش‌فرض طبق آخرین تغییرات Groq
-const MODEL_ID = 'openai/gpt-oss-120b';
+const MODEL_ID = 'llama-3.3-70b-versatile';
 
 export function getStoredGroqApiKey(): string | null {
   try {
