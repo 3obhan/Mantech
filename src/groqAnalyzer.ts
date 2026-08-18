@@ -14,7 +14,11 @@ import { Fallacy } from './types';
  */
 
 const STORAGE_KEY = 'mantec_groq_api_key';
-const MODEL_ID = 'llama-3.3-70b-versatile';
+// llama-3.3-70b-versatile was deprecated by Groq and shut down 2026-08-16.
+// openai/gpt-oss-120b is Groq's recommended production-grade replacement
+// (the other option, qwen/qwen3.6-27b, is preview-only on Groq — not ideal
+// for a flow that relies on strict JSON mode).
+const MODEL_ID = 'openai/gpt-oss-120b';
 
 export function getStoredGroqApiKey(): string | null {
   try {
