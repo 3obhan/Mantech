@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "license": "MIT",
-  "author": "Sobhan Ganji",
-  "description": "Mantec | منطک — a fully offline, 100% free, dependency-free Persian & English logical fallacy analyzer. No API key, no backend, no account required.",
+  "license": "UNLICENSED",
+  "author": "Sobhan Ganji — Developer of Hardo (هاردو)",
+  "description": "Mantech | منطک — proprietary Persian and English logical reasoning analyzer powered by local WebGPU/WebLLM inference.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
