@@ -6,6 +6,7 @@ import { Home } from './components/Home';
 import { Analyze } from './components/Analyze';
 import { HistoryView } from './components/History';
 import { Spiritual } from './components/Spiritual';
+import { About } from './components/About';
 
 const LayoutWrapper = ({ children, dir }: { children: React.ReactNode, dir: 'rtl' | 'ltr' }) => {
   const { lang, setLang } = useAppState();
@@ -67,6 +68,7 @@ const AppContent = () => {
         <Route path="/analyze" element={<Analyze />} />
         <Route path="/history" element={<HistoryView />} />
         <Route path="/spiritual" element={<Spiritual />} />
+        <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </LayoutWrapper>
