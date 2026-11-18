@@ -37,6 +37,9 @@ export const Analyze = () => {
     catch { return 'auto'; }
   });
 
+  const hasCloudflare = !!(cloudflareCredentials.accountId && cloudflareCredentials.apiToken);
+  const hasGroq = !!groqApiKey;
+
   const printRef = useRef<HTMLDivElement>(null);
 
   const generateFallbackSeal = (): string => {
@@ -259,9 +262,7 @@ export const Analyze = () => {
 
     // Try the selected engine first. In Auto mode, use the configured online engines
     // before WebGPU so a saved Cloudflare key is actually used immediately.
-    const hasCloudflare = !!(cloudflareCredentials.accountId && cloudflareCredentials.apiToken);
-    const hasGroq = !!groqApiKey;
-    const preferredOrder: Array<'cloudflare' | 'groq' | 'webgpu'> = enginePreference === 'auto'
+        const preferredOrder: Array<'cloudflare' | 'groq' | 'webgpu'> = enginePreference === 'auto'
       ? ['cloudflare', 'groq', 'webgpu']
       : [enginePreference, ...(['cloudflare', 'groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
 
