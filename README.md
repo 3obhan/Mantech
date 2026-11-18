@@ -17,35 +17,29 @@ and *why* it's a problem.
 
 This version of Mantec runs **entirely in your browser**:
 
-- **No required API key.** Works out of the box; adding your own free
-  Groq key is optional, just for faster, stronger results.
+- **No required API key.** Works out of the box; a Groq key is optional and used only as a fallback if local WebGPU fails.
 - **No backend server.** There is no server to host, pay for, or keep online.
-- **No account, no login, no tracking.** Your text never leaves your device
+- **No account, no login, no tracking.** Your text stays on your device during local WebGPU analysis
   (or goes straight to Groq's API if you add your own key — see below).
 - **Nothing to install.** Everything runs in the browser tab; no separate
   app or background service is required.
 
-All analysis is performed by a real language model, tried in this order:
+The primary engine is **WebGPU + WebLLM**. The language model runs
+inside the browser on the user's own GPU. The first run downloads model
+weights; the browser can cache them for later sessions. The app chooses a
+starting model based on the browser's approximate device-memory hint and
+tries smaller compatible models if loading fails. Actual performance depends
+on the browser, GPU, driver, and available memory.
 
-1. **Groq** (recommended) — if you add your own free API key (get one at
-   [console.groq.com/keys](https://console.groq.com/keys)), the app calls
-   Groq's API directly from your browser
-   ([`src/groqAnalyzer.ts`](https://github.com/3obhan/Mantech/blob/main/src/groqAnalyzer.ts)).
-   Very fast responses, generous free tier, runs strong open-weight models.
-2. **In-browser AI (WebGPU)** — used automatically if no Groq key is set
-   (or Groq fails), via
-   [@mlc-ai/web-llm](https://github.com/mlc-ai/web-llm)
-   ([`src/webllmAnalyzer.ts`](https://github.com/3obhan/Mantech/blob/main/src/webllmAnalyzer.ts)).
-   Nothing to install, but support varies a lot by device/browser/GPU driver
-   combination.
+An optional **Groq** fallback is available only if the user has entered
+their own API key. It is attempted only when local WebGPU analysis fails.
+When that fallback is used, the submitted text is sent directly from the
+browser to Groq.
 
-Your API key is stored only in your browser's local storage and sent
-directly to Groq — never to us or any other server. Every user has their
-own free-tier quota, so there's no shared limit and no cost to anyone
-hosting this app.
+If you add a Groq key, it is stored in your browser's local storage and sent
+directly to Groq only when the local engine cannot run.
 
-Either way: no backend server to run, and no per-request cost to whoever
-hosts this app.
+No backend server is required. Local inference has no per-request API cost; optional Groq usage is subject to Groq's own limits.
 
 ## Running it locally | اجرای محلی
 
