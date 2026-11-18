@@ -99,7 +99,7 @@ export const Home = () => {
           </div>
         </a>
         
-        <Link to="/about" className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
+        <Link to="/about" aria-label={lang === 'fa' ? 'دربارهٔ منطک' : 'About Mantech'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
           <div className="flex items-center gap-4 sm:hidden">
             <BookOpen className="w-6 h-6 transition-transform group-hover:scale-110" />
             <span className="text-lg font-black leading-none">{lang === 'fa' ? 'درباره' : 'About'}</span>
