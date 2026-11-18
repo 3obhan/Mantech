@@ -32,6 +32,10 @@ export const Analyze = () => {
   const [cloudflareAccountInput, setCloudflareAccountInput] = useState('');
   const [cloudflareTokenInput, setCloudflareTokenInput] = useState('');
   const [showCloudflareForm, setShowCloudflareForm] = useState(false);
+  const [enginePreference, setEnginePreference] = useState<'auto' | 'cloudflare' | 'groq' | 'webgpu'>(() => {
+    try { return (localStorage.getItem('mantec_engine_preference') as 'auto' | 'cloudflare' | 'groq' | 'webgpu') || 'auto'; }
+    catch { return 'auto'; }
+  });
 
   const printRef = useRef<HTMLDivElement>(null);
 
@@ -253,45 +257,51 @@ export const Analyze = () => {
     let engineUsed: 'groq' | 'webgpu' | 'cloudflare' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
-    // WebGPU/WebLLM is primary: analysis runs locally on the user's device.
-    try {
-      analysisData = await runBrowserAIAnalysis(text, lang as 'fa' | 'en', (p) => setModelProgress(p));
-      engineUsed = 'webgpu';
-    } catch (webgpuErr: any) {
-      errors.push({ engine: 'WebGPU', message: webgpuErr?.message || String(webgpuErr) });
-      resetEngine();
-      console.warn('Local WebGPU analysis failed; trying optional Groq fallback:', webgpuErr);
-    }
+    // Try the selected engine first. In Auto mode, use the configured online engines
+    // before WebGPU so a saved Cloudflare key is actually used immediately.
+    const hasCloudflare = !!(cloudflareCredentials.accountId && cloudflareCredentials.apiToken);
+    const hasGroq = !!groqApiKey;
+    const preferredOrder: Array<'cloudflare' | 'groq' | 'webgpu'> = enginePreference === 'auto'
+      ? ['cloudflare', 'groq', 'webgpu']
+      : [enginePreference, ...(['cloudflare', 'groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
 
-    // Groq is an optional fallback only when the user has supplied a key.
-    if (!analysisData && groqApiKey) {
-      try {
-        analysisData = await runGroqAnalysis(text, lang as 'fa' | 'en');
-        engineUsed = 'groq';
-      } catch (groqErr: any) {
-        const msg = groqErr?.message || String(groqErr);
-        errors.push({ engine: 'Groq', message: msg });
-        if (msg === 'INVALID_API_KEY') {
-          clearStoredGroqApiKey();
-          setGroqApiKey(null);
+    for (const engine of preferredOrder) {
+      if (analysisData) break;
+      if (engine === 'cloudflare' && hasCloudflare) {
+        try {
+          analysisData = await runCloudflareAnalysis(text, lang as 'fa' | 'en');
+          engineUsed = 'cloudflare';
+        } catch (err: any) {
+          const msg = err?.message || String(err);
+          errors.push({ engine: 'Cloudflare AI', message: msg });
+          if (msg === 'INVALID_CLOUDFLARE_TOKEN') {
+            clearStoredCloudflareCredentials();
+            setCloudflareCredentials({ accountId: null, apiToken: null });
+          }
+          console.warn('Cloudflare AI failed:', err);
         }
-        console.warn('Optional Groq fallback failed:', groqErr);
-      }
-    }
-
-    // Cloudflare Workers AI is the next optional fallback, using the user's own Account ID and API token.
-    if (!analysisData && cloudflareCredentials.accountId && cloudflareCredentials.apiToken) {
-      try {
-        analysisData = await runCloudflareAnalysis(text, lang as 'fa' | 'en');
-        engineUsed = 'cloudflare';
-      } catch (cloudflareErr: any) {
-        const msg = cloudflareErr?.message || String(cloudflareErr);
-        errors.push({ engine: 'Cloudflare AI', message: msg });
-        if (msg === 'INVALID_CLOUDFLARE_TOKEN') {
-          clearStoredCloudflareCredentials();
-          setCloudflareCredentials({ accountId: null, apiToken: null });
+      } else if (engine === 'groq' && hasGroq) {
+        try {
+          analysisData = await runGroqAnalysis(text, lang as 'fa' | 'en');
+          engineUsed = 'groq';
+        } catch (err: any) {
+          const msg = err?.message || String(err);
+          errors.push({ engine: 'Groq', message: msg });
+          if (msg === 'INVALID_API_KEY') {
+            clearStoredGroqApiKey();
+            setGroqApiKey(null);
+          }
+          console.warn('Groq failed:', err);
         }
-        console.warn('Cloudflare Workers AI fallback failed:', cloudflareErr);
+      } else if (engine === 'webgpu') {
+        try {
+          analysisData = await runBrowserAIAnalysis(text, lang as 'fa' | 'en', (p) => setModelProgress(p));
+          engineUsed = 'webgpu';
+        } catch (err: any) {
+          errors.push({ engine: 'WebGPU', message: err?.message || String(err) });
+          resetEngine();
+          console.warn('WebGPU failed:', err);
+        }
       }
     }
 
@@ -502,6 +512,27 @@ export const Analyze = () => {
             </button>
           </div>
         )}
+      </div>
+
+      <div className="bg-white border-2 border-[#1A1A1A] p-3 mb-5 flex flex-col sm:flex-row sm:items-center gap-3">
+        <label htmlFor="analysis-engine" className="text-xs sm:text-sm font-bold shrink-0">
+          {isFa ? 'موتور تحلیل' : 'Analysis engine'}
+        </label>
+        <select
+          id="analysis-engine"
+          value={enginePreference}
+          onChange={(e) => {
+            const value = e.target.value as 'auto' | 'cloudflare' | 'groq' | 'webgpu';
+            setEnginePreference(value);
+            try { localStorage.setItem('mantec_engine_preference', value); } catch { /* ignore */ }
+          }}
+          className="flex-1 p-2 border-2 border-[#1A1A1A] bg-white text-sm font-bold"
+        >
+          <option value="auto">{isFa ? 'خودکار — اول Cloudflare، سپس Groq و WebGPU' : 'Auto — Cloudflare, then Groq and WebGPU'}</option>
+          <option value="cloudflare" disabled={!hasCloudflare}>{isFa ? 'Cloudflare AI' : 'Cloudflare AI'}{!hasCloudflare ? (isFa ? ' (بدون کلید)' : ' (no credentials)') : ''}</option>
+          <option value="groq" disabled={!hasGroq}>{isFa ? 'Groq' : 'Groq'}{!hasGroq ? (isFa ? ' (بدون کلید)' : ' (no key)') : ''}</option>
+          <option value="webgpu">WebGPU (on-device)</option>
+        </select>
       </div>
 
       {modelProgress && (
