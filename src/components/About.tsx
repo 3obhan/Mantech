@@ -65,7 +65,7 @@ export const About = () => {
     <div className="max-w-4xl mx-auto w-full animate-fade-in py-2 sm:py-6 font-sans">
       <div className="flex items-center justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl sm:text-5xl font-black">{fa ? 'دربارهٔ منطک' : 'About Mantech'}</h1>
+          <h1 className="text-3xl sm:text-5xl font-black">{fa ? 'درباره' : 'About'}</h1>
         </div>
         <Link to="/" className="inline-flex items-center gap-2 border-2 border-[#1A1A1A] bg-white px-3 py-2 sm:px-5 sm:py-3 font-bold hover:bg-[#1A1A1A] hover:text-white transition-colors">
           {fa ? 'بازگشت' : 'Back'}
