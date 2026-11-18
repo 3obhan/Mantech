@@ -248,9 +248,18 @@ export const Analyze = () => {
     let engineUsed: 'groq' | 'webgpu' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
-    // 1) Groq (cloud) — very fast, strong open-weight models, generous free
-    //    tier. Only used if the user has entered their own free API key.
-    if (groqApiKey) {
+    // WebGPU/WebLLM is primary: analysis runs locally on the user's device.
+    try {
+      analysisData = await runBrowserAIAnalysis(text, lang as 'fa' | 'en', (p) => setModelProgress(p));
+      engineUsed = 'webgpu';
+    } catch (webgpuErr: any) {
+      errors.push({ engine: 'WebGPU', message: webgpuErr?.message || String(webgpuErr) });
+      resetEngine();
+      console.warn('Local WebGPU analysis failed; trying optional Groq fallback:', webgpuErr);
+    }
+
+    // Groq is an optional fallback only when the user has supplied a key.
+    if (!analysisData && groqApiKey) {
       try {
         analysisData = await runGroqAnalysis(text, lang as 'fa' | 'en');
         engineUsed = 'groq';
@@ -261,18 +270,7 @@ export const Analyze = () => {
           clearStoredGroqApiKey();
           setGroqApiKey(null);
         }
-        console.warn('Groq failed, trying in-browser WebGPU AI:', groqErr);
-      }
-    }
-
-    // 2) In-browser WebGPU AI — no install required, but support varies by device.
-    if (!analysisData) {
-      try {
-        analysisData = await runBrowserAIAnalysis(text, lang as 'fa' | 'en', (p) => setModelProgress(p));
-        engineUsed = 'webgpu';
-      } catch (webgpuErr: any) {
-        errors.push({ engine: 'WebGPU', message: webgpuErr?.message || String(webgpuErr) });
-        resetEngine();
+        console.warn('Optional Groq fallback failed:', groqErr);
       }
     }
 
@@ -287,7 +285,7 @@ export const Analyze = () => {
         lang: lang as 'fa'|'en'
       });
     } else {
-      setAiFailReason(errors.map((e) => `[${e.engine}] ${e.message}`).join('\n\n'));
+      setAiFailReason(errors.map((e) => `[${e.engine}] ${e.message}`).join('\\n\\n'));
     }
 
     setLoading(false);
