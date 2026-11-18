@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Download, HelpCircle } from 'lucide-react';
 import { runBrowserAIAnalysis, resetEngine, LoadProgress } from '../webllmAnalyzer';
 import { runGroqAnalysis, getStoredGroqApiKey, setStoredGroqApiKey, clearStoredGroqApiKey } from '../groqAnalyzer';
-import { runCloudflareAnalysis, getStoredCloudflareCredentials, setStoredCloudflareCredentials, clearStoredCloudflareCredentials } from '../cloudflareAnalyzer';
 import { Fallacy } from '../types';
 import jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image-more';
@@ -23,21 +22,18 @@ export const Analyze = () => {
   const [stampSrc, setStampSrc] = useState<string>('');
   const [logoSrc, setLogoSrc] = useState<string>('');
   const [modelProgress, setModelProgress] = useState<LoadProgress | null>(null);
-  const [usedEngine, setUsedEngine] = useState<'groq' | 'webgpu' | 'cloudflare' | null>(null);
+  const [usedEngine, setUsedEngine] = useState<'groq' | 'webgpu' | null>(null);
   const [aiFailReason, setAiFailReason] = useState<string | null>(null);
   const [groqApiKey, setGroqApiKey] = useState<string | null>(() => getStoredGroqApiKey());
   const [groqApiKeyInput, setGroqApiKeyInput] = useState('');
   const [showGroqKeyForm, setShowGroqKeyForm] = useState(false);
-  const [cloudflareCredentials, setCloudflareCredentials] = useState(() => getStoredCloudflareCredentials());
-  const [cloudflareAccountInput, setCloudflareAccountInput] = useState('');
-  const [cloudflareTokenInput, setCloudflareTokenInput] = useState('');
-  const [showCloudflareForm, setShowCloudflareForm] = useState(false);
-  const [enginePreference, setEnginePreference] = useState<'auto' | 'cloudflare' | 'groq' | 'webgpu'>(() => {
-    try { return (localStorage.getItem('mantec_engine_preference') as 'auto' | 'cloudflare' | 'groq' | 'webgpu') || 'auto'; }
-    catch { return 'auto'; }
+  const [enginePreference, setEnginePreference] = useState<'auto' | 'groq' | 'webgpu'>(() => {
+    try {
+      const saved = localStorage.getItem('mantec_engine_preference');
+      return saved === 'groq' || saved === 'webgpu' ? saved : 'auto';
+    } catch { return 'auto'; }
   });
 
-  const hasCloudflare = !!(cloudflareCredentials.accountId && cloudflareCredentials.apiToken);
   const hasGroq = !!groqApiKey;
 
   const printRef = useRef<HTMLDivElement>(null);
@@ -257,31 +253,17 @@ export const Analyze = () => {
     setAiFailReason(null);
 
     let analysisData: Fallacy[] | null = null;
-    let engineUsed: 'groq' | 'webgpu' | 'cloudflare' | null = null;
+    let engineUsed: 'groq' | 'webgpu' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
-    // Try the selected engine first. In Auto mode, use the configured online engines
-    // before WebGPU so a saved Cloudflare key is actually used immediately.
-        const preferredOrder: Array<'cloudflare' | 'groq' | 'webgpu'> = enginePreference === 'auto'
-      ? ['cloudflare', 'groq', 'webgpu']
-      : [enginePreference, ...(['cloudflare', 'groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
+    // Try the selected engine first; Auto mode prefers Groq, then on-device WebGPU.
+    const preferredOrder: Array<'groq' | 'webgpu'> = enginePreference === 'auto'
+      ? ['groq', 'webgpu']
+      : [enginePreference, ...(['groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
 
     for (const engine of preferredOrder) {
       if (analysisData) break;
-      if (engine === 'cloudflare' && hasCloudflare) {
-        try {
-          analysisData = await runCloudflareAnalysis(text, lang as 'fa' | 'en');
-          engineUsed = 'cloudflare';
-        } catch (err: any) {
-          const msg = err?.message || String(err);
-          errors.push({ engine: 'Cloudflare AI', message: msg });
-          if (msg === 'INVALID_CLOUDFLARE_TOKEN') {
-            clearStoredCloudflareCredentials();
-            setCloudflareCredentials({ accountId: null, apiToken: null });
-          }
-          console.warn('Cloudflare AI failed:', err);
-        }
-      } else if (engine === 'groq' && hasGroq) {
+      if (engine === 'groq' && hasGroq) {
         try {
           analysisData = await runGroqAnalysis(text, lang as 'fa' | 'en');
           engineUsed = 'groq';
@@ -437,84 +419,6 @@ export const Analyze = () => {
         )}
       </div>
 
-      <div className="bg-white border-4 border-[#1A1A1A] p-4 mb-6 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-        {cloudflareCredentials.accountId && cloudflareCredentials.apiToken ? (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <p className="text-xs sm:text-sm font-bold text-[#2E7D32]">
-              {isFa ? '✓ دسترسی Cloudflare AI ثبت شده.' : '✓ Cloudflare AI credentials saved.'}
-            </p>
-            <button
-              onClick={() => { clearStoredCloudflareCredentials(); setCloudflareCredentials({ accountId: null, apiToken: null }); setShowCloudflareForm(true); }}
-              className="text-xs underline font-bold text-gray-500 hover:text-[#1A1A1A] shrink-0"
-            >
-              {isFa ? 'حذف/تغییر دسترسی' : 'Remove / change credentials'}
-            </button>
-          </div>
-        ) : showCloudflareForm ? (
-          <div className="flex flex-col gap-2">
-            <p className="text-xs sm:text-sm font-bold">
-              {isFa
-                ? 'Account ID و API Token کلادفلر با مجوز Workers AI را وارد کن. این اطلاعات فقط در مرورگر خودت ذخیره می‌شوند.'
-                : 'Enter your Cloudflare Account ID and an API Token with Workers AI permission. They are stored only in this browser.'}
-            </p>
-            <input
-              type="text"
-              value={cloudflareAccountInput}
-              onChange={(e) => setCloudflareAccountInput(e.target.value)}
-              placeholder="Cloudflare Account ID"
-              className="w-full p-2 border-2 border-[#1A1A1A] font-mono text-sm"
-              dir="ltr"
-              autoComplete="off"
-            />
-            <input
-              type="password"
-              value={cloudflareTokenInput}
-              onChange={(e) => setCloudflareTokenInput(e.target.value)}
-              placeholder="Cloudflare API Token"
-              className="w-full p-2 border-2 border-[#1A1A1A] font-mono text-sm"
-              dir="ltr"
-              autoComplete="new-password"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  if (cloudflareAccountInput.trim() && cloudflareTokenInput.trim()) {
-                    setStoredCloudflareCredentials(cloudflareAccountInput, cloudflareTokenInput);
-                    setCloudflareCredentials({ accountId: cloudflareAccountInput.trim(), apiToken: cloudflareTokenInput.trim() });
-                    setCloudflareAccountInput('');
-                    setCloudflareTokenInput('');
-                    setShowCloudflareForm(false);
-                  }
-                }}
-                className="px-4 py-2 bg-[#1A1A1A] text-white font-bold text-sm hover:opacity-80"
-              >
-                {isFa ? 'ذخیره' : 'Save'}
-              </button>
-              <button onClick={() => setShowCloudflareForm(false)} className="px-4 py-2 border-2 border-[#1A1A1A] font-bold text-sm">
-                {isFa ? 'انصراف' : 'Cancel'}
-              </button>
-            </div>
-            <a className="text-xs underline" href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noreferrer">
-              {isFa ? 'ساخت API Token در Cloudflare' : 'Create a Cloudflare API Token'}
-            </a>
-          </div>
-        ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <p className="text-xs sm:text-sm font-bold">
-              {isFa
-                ? 'برای موتور آنلاین Cloudflare Workers AI، Account ID و کلید اختصاصی خودت را اضافه کن.'
-                : 'Add your Cloudflare Account ID and API token to use Workers AI online.'}
-            </p>
-            <button
-              onClick={() => setShowCloudflareForm(true)}
-              className="px-4 py-2 bg-[#1A1A1A] text-white font-bold text-xs uppercase shrink-0 hover:opacity-80"
-            >
-              {isFa ? 'افزودن Cloudflare' : 'Add Cloudflare'}
-            </button>
-          </div>
-        )}
-      </div>
-
       <div className="bg-white border-2 border-[#1A1A1A] p-3 mb-5 flex flex-col sm:flex-row sm:items-center gap-3">
         <label htmlFor="analysis-engine" className="text-xs sm:text-sm font-bold shrink-0">
           {isFa ? 'موتور تحلیل' : 'Analysis engine'}
@@ -523,14 +427,13 @@ export const Analyze = () => {
           id="analysis-engine"
           value={enginePreference}
           onChange={(e) => {
-            const value = e.target.value as 'auto' | 'cloudflare' | 'groq' | 'webgpu';
+            const value = e.target.value as 'auto' | 'groq' | 'webgpu';
             setEnginePreference(value);
             try { localStorage.setItem('mantec_engine_preference', value); } catch { /* ignore */ }
           }}
           className="flex-1 p-2 border-2 border-[#1A1A1A] bg-white text-sm font-bold"
         >
-          <option value="auto">{isFa ? 'خودکار — اول Cloudflare، سپس Groq و WebGPU' : 'Auto — Cloudflare, then Groq and WebGPU'}</option>
-          <option value="cloudflare" disabled={!hasCloudflare}>{isFa ? 'Cloudflare AI' : 'Cloudflare AI'}{!hasCloudflare ? (isFa ? ' (بدون کلید)' : ' (no credentials)') : ''}</option>
+          <option value="auto">{isFa ? 'خودکار — اول Groq، سپس WebGPU' : 'Auto — Groq, then WebGPU'}</option>
           <option value="groq" disabled={!hasGroq}>{isFa ? 'Groq' : 'Groq'}{!hasGroq ? (isFa ? ' (بدون کلید)' : ' (no key)') : ''}</option>
           <option value="webgpu">WebGPU (on-device)</option>
         </select>
@@ -597,9 +500,7 @@ export const Analyze = () => {
               <span className="text-[10px] sm:text-xs font-mono font-bold uppercase text-gray-500">
                 {usedEngine === 'groq'
                   ? (isFa ? 'انجام‌شده با Groq (آنلاین، سریع)' : 'Performed by Groq (online, fast)')
-                  : usedEngine === 'cloudflare'
-                    ? (isFa ? 'انجام‌شده با Cloudflare Workers AI' : 'Performed by Cloudflare Workers AI')
-                    : (isFa ? 'انجام‌شده با هوش مصنوعی داخل مرورگر' : 'Performed by in-browser AI')}
+                  : (isFa ? 'انجام‌شده با هوش مصنوعی داخل مرورگر' : 'Performed by in-browser AI')}
               </span>
             )}
             <button 
