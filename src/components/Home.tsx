@@ -125,7 +125,7 @@ export const Home = () => {
           <div className="text-xl font-black opacity-40 group-hover:opacity-75 leading-none sm:hidden">{getNum('06')}</div>
           <div className="hidden sm:flex justify-between items-start">
             <div className="text-6xl font-black opacity-10 group-hover:opacity-20 transition-opacity">{getNum('06')}</div>
-            <span className="text-5xl font-black leading-none">{lang === 'fa' ? '؟' : '?'}</span>
+            <span className="text-5xl font-black leading-none">❝</span>
           </div>
           <div className="hidden sm:block mt-8 pt-8 border-t-4 border-transparent group-hover:border-white transition-colors">
             <h2 className="text-4xl font-bold mb-2">{lang === 'fa' ? 'نمونه‌ها' : 'Examples'}</h2>
