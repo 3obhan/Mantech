@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppState } from '../store';
 import { translations } from '../i18n';
 import { Link } from 'react-router-dom';
-import { PenTool, Library, Heart, Coins, Info, BookOpen } from 'lucide-react';
+import { PenTool, Library, Heart, Coins, Compass, ListChecks } from 'lucide-react';
 
 export const Home = () => {
   const { lang } = useAppState();
@@ -103,13 +103,13 @@ export const Home = () => {
         
         <Link to="/about" aria-label={lang === 'fa' ? 'درباره' : 'About'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
           <div className="flex items-center gap-4 sm:hidden">
-            <Info className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
+            <Compass className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
             <span className="text-lg font-black leading-none">{lang === 'fa' ? 'درباره' : 'About'}</span>
           </div>
           <div className="text-xl font-black opacity-40 group-hover:opacity-75 leading-none sm:hidden">{getNum('05')}</div>
           <div className="hidden sm:flex justify-between items-start">
             <div className="text-6xl font-black opacity-10 group-hover:opacity-20 transition-opacity">{getNum('05')}</div>
-            <Info className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
+            <Compass className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
           </div>
           <div className="hidden sm:block mt-8 pt-8 border-t-4 border-transparent group-hover:border-white transition-colors">
             <h2 className="text-4xl font-bold mb-2">{lang === 'fa' ? 'درباره' : 'About'}</h2>
@@ -119,13 +119,13 @@ export const Home = () => {
 
         <Link to="/samples" aria-label={lang === 'fa' ? 'نمونه‌ها' : 'Examples'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
           <div className="flex items-center gap-4 sm:hidden">
-            <BookOpen className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
+            <ListChecks className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
             <span className="text-lg font-black leading-none">{lang === 'fa' ? 'نمونه‌ها' : 'Examples'}</span>
           </div>
           <div className="text-xl font-black opacity-40 group-hover:opacity-75 leading-none sm:hidden">{getNum('06')}</div>
           <div className="hidden sm:flex justify-between items-start">
             <div className="text-6xl font-black opacity-10 group-hover:opacity-20 transition-opacity">{getNum('06')}</div>
-            <BookOpen className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
+            <ListChecks className="w-6 h-6 sm:w-12 sm:h-12 transition-transform group-hover:scale-110" strokeWidth={2} />
           </div>
           <div className="hidden sm:block mt-8 pt-8 border-t-4 border-transparent group-hover:border-white transition-colors">
             <h2 className="text-4xl font-bold mb-2">{lang === 'fa' ? 'نمونه‌ها' : 'Examples'}</h2>
