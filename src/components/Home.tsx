@@ -17,7 +17,9 @@ export const Home = () => {
       .replace(/1/g, '۱')
       .replace(/2/g, '۲')
       .replace(/3/g, '۳')
-      .replace(/4/g, '۴');
+      .replace(/4/g, '۴')
+      .replace(/5/g, '۵')
+      .replace(/6/g, '۶');
   };
 
   return (
@@ -99,19 +101,35 @@ export const Home = () => {
           </div>
         </a>
         
-        <Link to="/about" aria-label={lang === 'fa' ? 'دربارهٔ منطک' : 'About Mantech'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
+        <Link to="/about" aria-label={lang === 'fa' ? 'درباره' : 'About'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
           <div className="flex items-center gap-4 sm:hidden">
-            <BookOpen className="w-6 h-6 transition-transform group-hover:scale-110" />
+            <span className="text-2xl leading-none">❕</span>
             <span className="text-lg font-black leading-none">{lang === 'fa' ? 'درباره' : 'About'}</span>
           </div>
           <div className="text-xl font-black opacity-40 group-hover:opacity-75 leading-none sm:hidden">{getNum('05')}</div>
           <div className="hidden sm:flex justify-between items-start">
             <div className="text-6xl font-black opacity-10 group-hover:opacity-20 transition-opacity">{getNum('05')}</div>
-            <BookOpen className="w-12 h-12 transition-transform group-hover:scale-110" />
+            <span className="text-5xl leading-none">❕</span>
           </div>
           <div className="hidden sm:block mt-8 pt-8 border-t-4 border-transparent group-hover:border-white transition-colors">
             <h2 className="text-4xl font-bold mb-2">{lang === 'fa' ? 'درباره' : 'About'}</h2>
-            <p className="text-sm font-bold opacity-70 uppercase tracking-widest">{lang === 'fa' ? 'روش کار و معرفی منطک' : 'How Mantech Works'}</p>
+            <p className="text-sm font-bold opacity-70 uppercase tracking-widest">{lang === 'fa' ? 'روش کار' : 'How it works'}</p>
+          </div>
+        </Link>
+
+        <Link to="/samples" aria-label={lang === 'fa' ? 'نمونه‌ها' : 'Examples'} className="group bg-white border-2 sm:border-4 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white p-4.5 sm:p-8 flex flex-row sm:flex-col justify-between items-center sm:items-stretch min-h-[76px] sm:min-h-[240px] transition-all duration-300 cursor-pointer shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] sm:shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] outline-none focus:bg-[#1A1A1A] focus:text-white">
+          <div className="flex items-center gap-4 sm:hidden">
+            <span className="text-2xl leading-none">❕</span>
+            <span className="text-lg font-black leading-none">{lang === 'fa' ? 'نمونه‌ها' : 'Examples'}</span>
+          </div>
+          <div className="text-xl font-black opacity-40 group-hover:opacity-75 leading-none sm:hidden">{getNum('06')}</div>
+          <div className="hidden sm:flex justify-between items-start">
+            <div className="text-6xl font-black opacity-10 group-hover:opacity-20 transition-opacity">{getNum('06')}</div>
+            <span className="text-5xl leading-none">❕</span>
+          </div>
+          <div className="hidden sm:block mt-8 pt-8 border-t-4 border-transparent group-hover:border-white transition-colors">
+            <h2 className="text-4xl font-bold mb-2">{lang === 'fa' ? 'نمونه‌ها' : 'Examples'}</h2>
+            <p className="text-sm font-bold opacity-70 uppercase tracking-widest">{lang === 'fa' ? 'نمونه‌های خطاهای منطقی' : 'Examples of logical errors'}</p>
           </div>
         </Link>
       </div>
