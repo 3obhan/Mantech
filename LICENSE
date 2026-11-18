@@ -1,21 +1,78 @@
-MIT License
+PROPRIETARY SOFTWARE LICENSE
+ALL RIGHTS RESERVED
 
 Copyright (c) 2026 Sobhan Ganji
+Owner of all rights: Sobhan Ganji
+Developer of the Hardo (هاردو) brand
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Project: Mantech (منطک)
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. OWNERSHIP
+Unless a file or component is expressly identified as third-party material,
+the Mantech name, brand assets, logos, visual design, original source code,
+application structure, prompts, documentation, and other original materials
+in this repository are the exclusive intellectual property of Sobhan Ganji.
+All rights, title, and interest in those materials are reserved.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. NO LICENSE GRANTED
+This repository is published for identification, inspection, and reference
+only. No license or other permission is granted, whether express, implied,
+by estoppel, or otherwise, to use, execute, reproduce, copy, modify, adapt,
+translate, create derivative works from, distribute, publish, sublicense,
+sell, rent, lease, host, deploy, make available, or commercially exploit
+the Software or any part of it.
+
+Access to this public repository, including the ability to view or clone it
+through a hosting platform, does not grant permission to use or exploit the
+Software.
+
+3. PROHIBITED ACTIVITIES
+Without the copyright owner's prior written permission, you must not:
+- copy, reproduce, republish, or redistribute the source code or substantial
+  portions of it;
+- modify the Software or create, offer, or distribute derivative works;
+- use the Software, its code, design, name, or branding in a product,
+  service, competing project, or commercial offering;
+- host, deploy, operate, or provide the Software to third parties;
+- remove, obscure, or alter copyright, ownership, or proprietary notices;
+- use the Mantech or Hardo names, logos, or other brand identifiers in a way
+  that suggests endorsement, affiliation, or ownership;
+- reverse engineer, decompile, or disassemble distributed executable
+  components, except to the extent such restriction is prohibited by
+  applicable mandatory law.
+
+4. PERMISSIONS
+Any permission must be obtained in advance in a separate written agreement
+signed by Sobhan Ganji or an expressly authorized representative. A
+conversation, public repository, contribution, issue, pull request, or
+attribution alone does not constitute such permission.
+
+5. THIRD-PARTY MATERIAL
+This license applies only to material owned by Sobhan Ganji. Dependencies,
+open-source packages, model weights, fonts, and other third-party materials
+remain subject to their respective owners' licenses and terms. Nothing in
+this notice overrides those separate licenses. Users are responsible for
+reviewing and complying with the applicable third-party terms.
+
+6. NO WARRANTY
+To the maximum extent permitted by applicable law, the Software and all
+associated materials are provided "AS IS", without warranties or conditions
+of any kind, express or implied, including fitness for a particular purpose,
+merchantability, accuracy, availability, and non-infringement.
+
+7. LIMITATION OF LIABILITY
+To the maximum extent permitted by applicable law, the copyright owner
+shall not be liable for any claim, loss, or damage arising from or related
+to access to, inability to use, use, or misuse of the Software or its
+materials.
+
+8. RESERVATION OF RIGHTS
+All rights not expressly granted in a separate written permission are
+reserved by Sobhan Ganji. Nothing in this notice limits rights that cannot
+lawfully be excluded under applicable law.
+
+For licensing and written permission, contact the copyright owner through
+the contact details published by Sobhan Ganji.
+
+Copyright (c) 2026 Sobhan Ganji. All rights reserved.
+Developer of Hardo (هاردو).
