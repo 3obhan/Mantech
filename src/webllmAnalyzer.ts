@@ -29,12 +29,32 @@ import { Fallacy } from './types';
 // "Unable to find a compatible GPU" on those devices. f32 models are a bit
 // larger and slightly slower, but work on any WebGPU-capable device without
 // needing any capability detection or runtime branching.
-export const MODEL_TIERS = [
-  'Llama-3.1-8B-Instruct-q4f32_1-MLC',   // strongest — ~8B params, needs a capable GPU
-  'Qwen2.5-7B-Instruct-q4f32_1-MLC',     // strong, good multilingual (incl. Persian)
-  'Qwen2.5-3B-Instruct-q4f32_1-MLC',     // solid mid-tier
-  'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',   // light, for low-memory devices
-];
+// Start with a model appropriate for the device instead of downloading
+// multi-gigabyte models first. deviceMemory is an approximate browser hint,
+// not a measurement of dedicated GPU VRAM.
+const MODEL_TIERS_BY_MEMORY: Record<'low' | 'medium' | 'high', string[]> = {
+  low: [
+    'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',
+    'Qwen2.5-3B-Instruct-q4f32_1-MLC',
+  ],
+  medium: [
+    'Qwen2.5-3B-Instruct-q4f32_1-MLC',
+    'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',
+    'Qwen2.5-7B-Instruct-q4f32_1-MLC',
+  ],
+  high: [
+    'Qwen2.5-7B-Instruct-q4f32_1-MLC',
+    'Llama-3.1-8B-Instruct-q4f32_1-MLC',
+    'Qwen2.5-3B-Instruct-q4f32_1-MLC',
+    'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',
+  ],
+};
+
+export function getModelTiers(): string[] {
+  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  const tier = memory === undefined ? 'medium' : memory < 4 ? 'low' : memory < 8 ? 'medium' : 'high';
+  return MODEL_TIERS_BY_MEMORY[tier];
+}
 
 export type LoadProgress = {
   progress: number; // 0..1
@@ -77,7 +97,7 @@ export async function getEngine(
 
     let lastErr: unknown = null;
 
-    for (const modelId of MODEL_TIERS) {
+    for (const modelId of getModelTiers()) {
       try {
         const e = await mod.CreateMLCEngine(modelId, { initProgressCallback: cb });
         activeModelId = modelId;
@@ -198,6 +218,10 @@ export async function runBrowserAIAnalysis(
   lang: 'fa' | 'en',
   onProgress?: (p: LoadProgress) => void
 ): Promise<Fallacy[]> {
+  if (!(await isWebGPUSupported())) {
+    throw new Error('WebGPU is unavailable in this browser or no compatible GPU adapter was found. Try a recent Chrome or Edge browser with hardware acceleration enabled.');
+  }
+
   let eng = await withTimeout(getEngine(onProgress), 10 * 60 * 1000, 'Model loading');
   const isPersian = lang === 'fa';
 
