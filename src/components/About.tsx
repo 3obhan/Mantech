@@ -62,10 +62,9 @@ export const About = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto w-full animate-fade-in py-2 sm:py-6">
+    <div className="max-w-4xl mx-auto w-full animate-fade-in py-2 sm:py-6 font-sans">
       <div className="flex items-center justify-between mb-6 sm:mb-8">
         <div>
-          <p className="text-xs font-black tracking-[0.25em] uppercase text-[#FF3B30] mb-2">MANTECH · V4.0</p>
           <h1 className="text-3xl sm:text-5xl font-black">{fa ? 'دربارهٔ منطک' : 'About Mantech'}</h1>
         </div>
         <Link to="/" className="inline-flex items-center gap-2 border-2 border-[#1A1A1A] bg-white px-3 py-2 sm:px-5 sm:py-3 font-bold hover:bg-[#1A1A1A] hover:text-white transition-colors">
@@ -83,13 +82,12 @@ export const About = () => {
       </div>
 
       <div className="space-y-4">
-        {sections.map(({ icon: Icon, title, body }, index) => (
+        {sections.map(({ icon: Icon, title, body }) => (
           <section key={title} className="bg-white border-2 border-[#1A1A1A] p-5 sm:p-6 flex gap-4 sm:gap-5">
             <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#1A1A1A] text-white flex items-center justify-center">
               <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-black tracking-widest text-[#FF3B30] mb-1">{String(index + 1).padStart(2, '0')}</p>
               <h2 className="text-lg sm:text-xl font-black mb-2">{title}</h2>
               <p className="text-sm sm:text-base leading-7 opacity-80">{body}</p>
             </div>
