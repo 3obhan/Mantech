@@ -4,7 +4,6 @@
 **ابزار دوزبانهٔ تحلیل خطاهای استدلالی و مغالطات منطقی**
 
 **Copyright © 2026 Sobhan Ganji**  
-**Developer of the Hardo (هاردو) brand**  
 **All rights reserved. Proprietary software.**
 
 ---
@@ -110,7 +109,6 @@ The Vite build produces static frontend assets. The application may be technical
 Mantech (منطک), including its original source code, application structure, prompts, documentation, and original brand assets, is proprietary.
 
 **Exclusive rights holder:** Sobhan Ganji  
-**Professional attribution:** Developer of the Hardo (هاردو) brand  
 **License:** Proprietary — All Rights Reserved
 
 No permission is granted to copy, modify, distribute, sublicense, host, deploy, sell, or commercially exploit this software. Written permission must be obtained in advance from the rights holder.
@@ -223,5 +221,4 @@ npm run lint
 
 **Mantech | منطک**  
 Copyright © 2026 Sobhan Ganji. All rights reserved.  
-**Developer of Hardo (هاردو)**  
 **Proprietary Software — All Rights Reserved**
