@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Cpu, ShieldCheck, Scale, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Cpu, ShieldCheck, Scale } from 'lucide-react';
 import { useAppState } from '../store';
 
 export const About = () => {
@@ -11,7 +11,7 @@ export const About = () => {
     {
       icon: BookOpen,
       title: 'منطک چیست؟',
-      body: 'منطک ابزاری آموزشی و تحلیلی برای بررسی استدلال‌ها و متن‌های فارسی و انگلیسی است. هدف آن کمک به تشخیص ضعف‌های استدلالی، تناقض‌ها، استنتاج‌های نامعتبر و مغالطات احتمالی و توضیح روشن‌تر آن‌هاست.'
+      body: 'منطک سامانه‌ای برای واکاوی ساختار عقلانی متن و استدلال است؛ از تناقض‌های آشکار و پنهان و ناسازگاری مفهومی تا خطاهای استنتاج، مغالطات صوری و غیرصوری، ابهام‌های معنایی، پیش‌فرض‌های پنهان و گسست میان مقدمات و نتیجه. هدف، صرفاً نام‌گذاری خطاها نیست؛ منطک می‌کوشد محل دقیق ایراد، سازوکار شکل‌گیری آن و نسبتش با کل استدلال را روشن کند.'
     },
     {
       icon: Cpu,
@@ -21,18 +21,13 @@ export const About = () => {
     {
       icon: Scale,
       title: 'مبنای تحلیل',
-      body: 'مدل تلاش می‌کند ادعاها، مقدمات و نتیجه‌گیری‌های متن را از هم تفکیک کند؛ سپس ارتباط میان آن‌ها را از نظر سازگاری، پیوستگی، کفایت دلیل و احتمال وجود مغالطه بررسی کند. خروجی، توضیحی درباره موارد مشکوک و چرایی آن‌هاست؛ نه حکم قطعی درباره حقیقت یا درستی یک دیدگاه.'
+      body: 'منطک ادعاها، مقدمات، مفروضات و نتیجه‌گیری‌ها را از هم تفکیک می‌کند؛ پیوندهای میان آن‌ها را می‌سنجد و متن را از نظر سازگاری درونی، اعتبار صورت استدلال، ارتباط دلیل با نتیجه، کفایت شواهد، دقت مفهومی و انواع مغالطه بررسی می‌کند. هر یافته باید تا حد امکان با نقل بخش مربوط از متن و توضیح روشنِ چرایی تشخیص همراه باشد.'
     },
     {
       icon: ShieldCheck,
       title: 'حریم خصوصی و مسیر جایگزین',
-      body: 'روش اصلی، پردازش محلی روی دستگاه است. اگر اجرای محلی در دسترس نباشد، تنها در صورتی که خودتان کلید API شخصی Groq را تنظیم کرده باشید، امکان استفاده از آن به‌عنوان مسیر جایگزین وجود دارد؛ در آن حالت متن برای پردازش به سرویس Groq ارسال می‌شود و شرایط حریم خصوصی آن سرویس اعمال خواهد شد.'
+      body: 'در روش محلی، مدل در مرورگر و روی سخت‌افزار دستگاه شما اجرا می‌شود و متن برای تحلیل به سرور منطک فرستاده نمی‌شود. فایل مدل در نخستین اجرا دریافت و برای استفاده‌های بعدی ذخیره می‌شود. مسیر جایگزین Groq نیز فقط با کلید APIای که خودتان وارد کرده‌اید فعال می‌شود؛ در این حالت متن برای پردازش به سرویس Groq ارسال خواهد شد.'
     },
-    {
-      icon: AlertTriangle,
-      title: 'محدودیت‌ها',
-      body: 'تحلیل هوش مصنوعی ممکن است ناقص یا نادرست باشد. تشخیص‌ندادن مغالطه، اعتبار یا حقیقت یک استدلال را ثابت نمی‌کند؛ همچنین هر ادعای بحث‌برانگیز یا نادرست الزاماً مغالطه نیست. نتیجه را نقطه شروعی برای بازبینی و تفکر مستقل بدانید، نه جایگزین آن.'
-    }
   ] : [
     {
       icon: BookOpen,
@@ -47,18 +42,13 @@ export const About = () => {
     {
       icon: Scale,
       title: 'The basis of analysis',
-      body: 'The model attempts to distinguish claims, premises, and conclusions, then examine their relationships for consistency, coherence, supporting evidence, and possible fallacies. Its output explains potentially problematic points and why they may be problematic; it is not a definitive ruling on truth or correctness.'
+      body: 'Mantech examines the structure of reasoning across a broad range of issues: explicit and hidden contradictions, conceptual inconsistencies, invalid inferences, formal and informal fallacies, semantic ambiguity, hidden assumptions, and gaps between premises and conclusions. Its aim is not merely to label errors, but to locate them, explain how they arise, and show how they affect the wider argument.'
     },
     {
       icon: ShieldCheck,
       title: 'Privacy and fallback',
-      body: 'The primary method is on-device processing. If local execution is unavailable, Groq can be used as an optional fallback only when you have configured your own Groq API key. In that case, the text is sent to Groq for processing and that service’s privacy terms apply.'
+      body: 'In local mode, the model runs in your browser on your own hardware, and your text is not sent to a Mantech server for analysis. Model files are downloaded on first use and cached for later sessions. The optional Groq fallback is available only if you enter your own API key; in that mode, the text is sent to Groq for processing.'
     },
-    {
-      icon: AlertTriangle,
-      title: 'Limitations',
-      body: 'AI analysis can be incomplete or incorrect. Failing to detect a fallacy does not prove that an argument is valid or true; likewise, a controversial or false claim is not automatically a logical fallacy. Treat the result as a starting point for review and independent thought, not a replacement for them.'
-    }
   ];
 
   return (
