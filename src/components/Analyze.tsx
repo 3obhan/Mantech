@@ -139,6 +139,15 @@ export const Analyze = () => {
   };
 
   useEffect(() => {
+    // Remove credentials left by the retired Cloudflare integration.
+    try {
+      localStorage.removeItem('mantec_cloudflare_account_id');
+      localStorage.removeItem('mantec_cloudflare_api_token');
+      if (localStorage.getItem('mantec_engine_preference') === 'cloudflare') {
+        localStorage.setItem('mantec_engine_preference', 'auto');
+      }
+    } catch { /* ignore unavailable localStorage */ }
+
     const preloadAndResizeSeal = async () => {
       const paths = [
         `${import.meta.env.BASE_URL}seal.png`
