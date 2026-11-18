@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "license": "UNLICENSED",
-  "author": "Sobhan Ganji — Developer of Hardo (هاردو)",
+  "author": "Sobhan Ganji",
   "description": "Mantech | منطک — proprietary Persian and English logical reasoning analyzer powered by local WebGPU/WebLLM inference.",
   "scripts": {
     "dev": "vite",
