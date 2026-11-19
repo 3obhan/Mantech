@@ -27,13 +27,6 @@ export const Analyze = () => {
   const [groqApiKey, setGroqApiKey] = useState<string | null>(() => getStoredGroqApiKey());
   const [groqApiKeyInput, setGroqApiKeyInput] = useState('');
   const [showGroqKeyForm, setShowGroqKeyForm] = useState(false);
-  const [enginePreference, setEnginePreference] = useState<'auto' | 'groq' | 'webgpu'>(() => {
-    try {
-      const saved = localStorage.getItem('mantec_engine_preference');
-      return saved === 'groq' || saved === 'webgpu' ? saved : 'auto';
-    } catch { return 'auto'; }
-  });
-
   const hasGroq = !!groqApiKey;
 
   const printRef = useRef<HTMLDivElement>(null);
@@ -143,9 +136,7 @@ export const Analyze = () => {
     try {
       localStorage.removeItem('mantec_cloudflare_account_id');
       localStorage.removeItem('mantec_cloudflare_api_token');
-      if (localStorage.getItem('mantec_engine_preference') === 'cloudflare') {
-        localStorage.setItem('mantec_engine_preference', 'auto');
-      }
+      localStorage.removeItem('mantec_engine_preference');
     } catch { /* ignore unavailable localStorage */ }
 
     const preloadAndResizeSeal = async () => {
@@ -265,10 +256,11 @@ export const Analyze = () => {
     let engineUsed: 'groq' | 'webgpu' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
-    // Try on-device WebGPU first in Auto mode; use Groq only as a fallback.
-    const preferredOrder: Array<'groq' | 'webgpu'> = enginePreference === 'auto'
-      ? ['webgpu', 'groq']
-      : [enginePreference, ...(['groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
+    // Use Groq when the user has provided a key; otherwise run locally with WebGPU/WebLLM.
+    // If Groq fails, fall back to the on-device model.
+    const preferredOrder: Array<'groq' | 'webgpu'> = hasGroq
+      ? ['groq', 'webgpu']
+      : ['webgpu'];
 
     for (const engine of preferredOrder) {
       if (analysisData) break;
@@ -426,26 +418,6 @@ export const Analyze = () => {
             </button>
           </div>
         )}
-      </div>
-
-      <div className="bg-white border-2 border-[#1A1A1A] p-3 mb-5 flex flex-col sm:flex-row sm:items-center gap-3">
-        <label htmlFor="analysis-engine" className="text-xs sm:text-sm font-bold shrink-0">
-          {isFa ? 'موتور تحلیل' : 'Analysis engine'}
-        </label>
-        <select
-          id="analysis-engine"
-          value={enginePreference}
-          onChange={(e) => {
-            const value = e.target.value as 'auto' | 'groq' | 'webgpu';
-            setEnginePreference(value);
-            try { localStorage.setItem('mantec_engine_preference', value); } catch { /* ignore */ }
-          }}
-          className="flex-1 p-2 border-2 border-[#1A1A1A] bg-white text-sm font-bold"
-        >
-          <option value="auto">{isFa ? 'خودکار — اول Groq، سپس WebGPU' : 'Auto — Groq, then WebGPU'}</option>
-          <option value="groq" disabled={!hasGroq}>{isFa ? 'Groq' : 'Groq'}{!hasGroq ? (isFa ? ' (بدون کلید)' : ' (no key)') : ''}</option>
-          <option value="webgpu">WebGPU (on-device)</option>
-        </select>
       </div>
 
       {modelProgress && (
