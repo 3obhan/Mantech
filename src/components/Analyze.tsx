@@ -265,9 +265,9 @@ export const Analyze = () => {
     let engineUsed: 'groq' | 'webgpu' | null = null;
     const errors: { engine: string; message: string }[] = [];
 
-    // Try the selected engine first; Auto mode prefers Groq, then on-device WebGPU.
+    // Try on-device WebGPU first in Auto mode; use Groq only as a fallback.
     const preferredOrder: Array<'groq' | 'webgpu'> = enginePreference === 'auto'
-      ? ['groq', 'webgpu']
+      ? ['webgpu', 'groq']
       : [enginePreference, ...(['groq', 'webgpu'] as const).filter((engine) => engine !== enginePreference)];
 
     for (const engine of preferredOrder) {
